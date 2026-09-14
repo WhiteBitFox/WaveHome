@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.WaveHome" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Wyłączenie splash screen -->
+        <item name="android:windowSplashScreenBackground">@null</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@null</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@null</item>
+
+        <!-- Dynamiczne tło -->
+        <item name="android:windowBackground">@color/windowBackground</item>
+    </style>
+
+</resources>

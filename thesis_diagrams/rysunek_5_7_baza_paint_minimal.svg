@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="950" viewBox="0 0 1800 950">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="white" stroke="black" stroke-width="1"/>
+    </marker>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 34px; font-weight: 700; fill: #000; }
+      .pkg { font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #000; }
+      .cls { font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #000; }
+      .txt { font-family: Arial, sans-serif; font-size: 18px; fill: #000; }
+      .small { font-family: Arial, sans-serif; font-size: 15px; fill: #000; }
+      .box { fill: white; stroke: black; stroke-width: 3; }
+      .line { fill: none; stroke: black; stroke-width: 2; marker-end: url(#arrow); }
+      .dash { fill: none; stroke: black; stroke-width: 2; stroke-dasharray: 15 12; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="900" y="65" text-anchor="middle" class="title">Struktura bazy danych WaveHome</text>
+
+  <rect x="100" y="155" width="1160" height="690" class="box"/>
+  <rect x="100" y="121" width="390" height="34" class="box"/>
+  <text x="116" y="146" class="pkg">AppDatabase / time_log.db</text>
+
+  <rect x="1350" y="280" width="350" height="360" class="box"/>
+  <rect x="1350" y="246" width="300" height="34" class="box"/>
+  <text x="1366" y="271" class="pkg">ActivityDatabase</text>
+
+  <g>
+    <rect x="505" y="245" width="350" height="110" class="box"/>
+    <line x1="505" y1="287" x2="855" y2="287" stroke="black" stroke-width="2"/>
+    <text x="680" y="276" text-anchor="middle" class="cls">TimeLog</text>
+    <text x="521" y="322" class="txt">centralny rekord cyklu</text>
+  </g>
+
+  <g>
+    <rect x="165" y="520" width="330" height="110" class="box"/>
+    <line x1="165" y1="562" x2="495" y2="562" stroke="black" stroke-width="2"/>
+    <text x="330" y="551" text-anchor="middle" class="cls">TimeLogDeviceState</text>
+    <text x="181" y="597" class="txt">stany urządzeń</text>
+  </g>
+
+  <g>
+    <rect x="545" y="520" width="330" height="110" class="box"/>
+    <line x1="545" y1="562" x2="875" y2="562" stroke="black" stroke-width="2"/>
+    <text x="710" y="551" text-anchor="middle" class="cls">RoomFingerprint</text>
+    <text x="561" y="597" class="txt">odciski Wi-Fi/Bluetooth</text>
+  </g>
+
+  <g>
+    <rect x="925" y="520" width="270" height="110" class="box"/>
+    <line x1="925" y1="562" x2="1195" y2="562" stroke="black" stroke-width="2"/>
+    <text x="1060" y="551" text-anchor="middle" class="cls">UserOverride</text>
+    <text x="941" y="597" class="txt">korekty użytkownika</text>
+  </g>
+
+  <g>
+    <rect x="545" y="700" width="330" height="100" class="box"/>
+    <line x1="545" y1="742" x2="875" y2="742" stroke="black" stroke-width="2"/>
+    <text x="710" y="731" text-anchor="middle" class="cls">RoomDetection</text>
+    <text x="561" y="777" class="txt">historia rozpoznań</text>
+  </g>
+
+  <g>
+    <rect x="1395" y="420" width="260" height="110" class="box"/>
+    <line x1="1395" y1="462" x2="1655" y2="462" stroke="black" stroke-width="2"/>
+    <text x="1525" y="451" text-anchor="middle" class="cls">ActivityLog</text>
+    <text x="1411" y="497" class="txt">aktywność użytkownika</text>
+  </g>
+
+  <path d="M505 355 L330 520" class="line"/>
+  <text x="364" y="438" class="small">1 : N</text>
+
+  <path d="M680 355 L710 520" class="dash"/>
+  <text x="723" y="438" class="small">roomName</text>
+
+  <path d="M855 355 L1060 520" class="dash"/>
+  <text x="963" y="438" class="small">korekta</text>
+
+  <path d="M710 630 L710 700" class="dash"/>
+  <text x="758" y="671" class="small">detekcja</text>
+
+  <path d="M1395 475 L855 300" class="dash"/>
+  <text x="1115" y="378" class="small">timestamp</text>
+
+  <rect x="310" y="880" width="1180" height="42" class="box" stroke-width="2"/>
+  <text x="335" y="906" class="small">Linia ciągła: relacja bezpośrednia    |    Linia przerywana: powiązanie logiczne używane w analizie</text>
+</svg>

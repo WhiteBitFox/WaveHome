@@ -1,0 +1,157 @@
+@startuml
+title Struktura danych lokalnych WaveHome\nzapis pojedynczego cyklu pomiarowego
+
+skinparam backgroundColor white
+skinparam shadowing true
+skinparam roundcorner 18
+skinparam defaultFontName Arial
+skinparam defaultFontSize 16
+skinparam titleFontSize 24
+skinparam titleFontStyle bold
+skinparam classFontSize 15
+skinparam classAttributeFontSize 14
+skinparam packageFontSize 18
+skinparam packageFontStyle bold
+skinparam ArrowColor #334155
+skinparam ArrowThickness 2
+
+skinparam class {
+    BorderColor #334155
+    BackgroundColor #F8FAFC
+}
+
+package "Źródła danych" #D5E8D4 {
+    class "Google Fit" as Fit {
+        sen użytkownika
+        czas i zakres snu
+    }
+
+    class "Activity Recognition" as AR {
+        activityType
+        userStatus
+    }
+
+    class "Wi-Fi / Bluetooth" as Radio {
+        BSSID / MAC
+        RSSI
+    }
+
+    class "OpenWeather" as Weather {
+        temperatura
+        wilgotność
+        wiatr i opady
+    }
+
+    class "Google Home API" as HomeApi {
+        lista urządzeń
+        stan On/Off
+    }
+}
+
+package "Główny zapis cyklu" #FFF2CC {
+    class "time_logs\nTimeLog" as TimeLog {
+        + id: Long <<PK>>
+        + timestamp: Long
+        --
+        + isHome: Boolean?
+        + roomName: String?
+        + activityType: String?
+        + userStatus: String?
+        --
+        + sleepMinutesLastNight: Int?
+        + sleepRange: String?
+        + sleptLastNight: Boolean?
+        + isSleeping: Boolean?
+        --
+        + temperature: Double?
+        + humidity: Int?
+        + windSpeed: Double?
+        + precipitation: Double?
+        + airQuality: Int?
+        --
+        + mlInputVector: FloatArray?
+        + predictedOutputClass: Int?
+        + predictionSource: String?
+    }
+}
+
+package "Dane powiązane i pomocnicze" #E6E6E6 {
+    class "time_log_device_states\nTimeLogDeviceState" as DeviceState #F8CECC {
+        + id: Long <<PK>>
+        + timeLogId: Long <<FK>>
+        + deviceId: String
+        + deviceName: String
+        + deviceType: String
+        + isOn: Boolean?
+        + supportsOnOff: Boolean
+        + capturedAt: Long
+    }
+
+    class "room_fingerprints\nRoomFingerprintEntity" as Fingerprint #E1D5E7 {
+        + id: Long <<PK>>
+        + roomName: String
+        + signalMap: Map<String, Int>
+        + updatedAt: Long
+    }
+
+    class "room_detections\nRoomDetectionEntity" as Detection #E1D5E7 {
+        + id: Long <<PK>>
+        + timestamp: Long
+        + roomName: String
+        + confidence: Double?
+        + signalMap: Map<String, Int>
+    }
+
+    class "activity_tracking.db\nactivity_logs" as ActivityLog #DAE8FC {
+        + id: Int <<PK>>
+        + activityType: String
+        + transitionType: String?
+        + userStatus: String?
+        + timestamp: Long
+    }
+
+    class "user_overrides\nUserOverride" as Override #F5F5F5 {
+        + id: Int <<PK>>
+        + sensorSnapshot: FloatArray
+        + correctOutput: Int
+        + timestamp: Long
+        + kind: String
+        + deviceId: String?
+        + deviceType: String?
+        + desiredOn: Boolean?
+        + expiresAt: Long?
+    }
+}
+
+Fit --> TimeLog : sen
+AR --> ActivityLog : zdarzenia aktywności
+ActivityLog ..> TimeLog : powiązanie po timestamp
+Radio --> Fingerprint : kalibracja
+Radio --> Detection : bieżący skan
+Detection ..> TimeLog : roomName
+Weather --> TimeLog : dane pogodowe
+HomeApi --> DeviceState : stany urządzeń
+
+TimeLog "1" --> "0..*" DeviceState : timeLogId
+Fingerprint ..> Detection : porównanie signalMap
+Override ..> TimeLog : korekta predykcji
+Override ..> DeviceState : blokada ręcznej decyzji
+
+note bottom of TimeLog
+Centralny rekord pomiarowy.
+Jeden wpis opisuje jeden cykl obserwacji systemu:
+kontekst, cechy ML, predykcję i źródło decyzji.
+end note
+
+note right of Fingerprint
+signalMap zawiera wspólną reprezentację
+sygnałów Wi-Fi i Bluetooth:
+identyfikator sygnału -> RSSI.
+end note
+
+note bottom
+Linia ciągła oznacza relację bezpośrednią lub zapis danych.
+Linia przerywana oznacza powiązanie logiczne wykorzystywane podczas analizy, detekcji lub predykcji.
+end note
+
+@enduml
